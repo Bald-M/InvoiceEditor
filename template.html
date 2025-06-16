@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Generator</title>
+  <link rel="stylesheet" href="./template.css">
+</head>
+<body>
+
+  <div class="title">
+    <div class="main-title">
+      <h1>HILLSIDE AUTOMOTIVE</h1>
+      <div class="ltd">
+        G.M. Enterprises Ltd
+      </div>
+    </div>
+    <div style="float: right;">
+      <img src="./logo-mta.png" class="logo">
+    </div>
+  </div>
+
+
+  <div class="header">
+    <!-- Left: Address -->
+    <div class="address">
+      <div class="street">719 Richardson Road</div>
+      <div class="suburb">Mt. Roskill</div>
+      <div class="city">Auckland 1042</div>
+    </div>
+  
+    <!-- Center: Company Info -->
+    <div class="company-info">
+      <div class="gst">GST No: 122-569-020</div>
+      <div class="email">Email: hillsideautomotive@gmail.com</div>
+      <div class="url">www.hillsideautomotive.co.nz</div>
+    </div>
+  
+    <!-- Right: Contact -->
+    <div class="contact-info">
+      <div>
+        <span class="phone">Phone:</span>
+        <span>09 625 2360</span>
+      </div>
+
+      <div>
+        <span class="mobile">Mobile:</span>
+        <span>0211244364</span>
+      </div>
+
+      <div>
+        <span class="fax">Fax:</span>
+        <span>09 625 2369</span>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="invoice-header">
+    <div class="date">February 15, 2024</div>
+    <div class="heading">Tax Invoice</div>
+    <div class="number">16291 - 1</div>
+  </div>
+
+  <div class="section-row">
+    <div class="customer-box">
+      <!-- Placeholder: can add name, phone, mobile later -->
+      <div class="row">
+        <span>Name:</span>
+        <span>John Appleseed</span>
+      </div>
+      <div class="row">
+        <span>Phone:</span>
+        <span>0212345678</span>
+      </div>
+      <div class="row">
+        <span>Plate No:</span>
+        <span>ABC123</span>
+      </div>
+      <div class="row">
+        <span>Address:</span>
+        <span>14 Kingsway Road, Mt Albert</span>
+      </div>
+      <div class="row">
+        <span>Mobile:</span>
+        <span>0277654321</span>
+      </div>
+    </div>
+  
+    <!-- Right: Vehicle Info -->
+    <div class="vehicle-box">
+      <div class="row" style="margin-bottom: 1rem;">
+        <span>Vehicle:</span>
+        <span>DK007</span>
+        <span>2019 Audi Q5</span>
+      </div>
+      <div class="row">
+        <span>Reading</span>
+        <span>87,030</span>
+        <span></span>
+      </div>
+      <div class="row">
+        <span>VIN Number</span>
+        <span></span>
+        <span style="text-align: end;">Fuel Type</span>
+      </div>
+      <div class="row">
+        <span>Chassis Nu</span>
+      </div>
+      <div class="row">
+        <span>Model Numb</span>
+      </div>
+      <div class="row">
+        <span>Engine Num</span>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th class="right">Qty</th>
+        <th class="right">Price</th>
+        <th class="right">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="description">CARRIED OUT FULL SERVICE. FLUSHED OUT ENGINE OIL. REPLACED OIL FILTER AND FILLED NEW OIL.
+          TOP UP ALL FLUID LEVEL. TYRE PRESSURE DONE. TYRE DRESSING DONE. BATTERY TEST DONE.
+          CHECKED BRAKE FLUID CONDITION FOUND OK. POLISHED HEAD LIGHT LENSES. CARRIED OUT BATTERY TEST. FOUND OK. GENERAL CHECK OVER DONE.</td>
+      </tr>
+      <tr><td>FULL SERVICE</td><td class="right">1.00</td><td class="right">450.00</td><td class="right">450.00</td></tr>
+      <tr><td>ENGINE SYSTEM FLUSH</td><td class="right">1.00</td><td class="right"></td><td class="right"></td></tr>
+      <tr><td>ENGINE OIL</td><td class="right">1.00</td><td class="right"></td><td class="right"></td></tr>
+      <tr><td>TYRE DRESSING</td><td class="right">1.00</td><td class="right"></td><td class="right"></td></tr>
+      <tr><td>TYRE DRESSING</td><td class="right">1.00</td><td class="right"></td><td class="right"></td></tr>
+      <tr><td>BATTERY TEST</td><td class="right">1.00</td><td class="right"></td><td class="right"></td></tr>
+      <tr><td>HEAD LIGHT LENS POLISH</td><td class="right">1.00</td><td class="right"></td><td class="right"></td></tr>
+      <tr><td>GENERAL CHECK OVER</td><td class="right">1.00</td><td class="right"></td><td class="right"></td></tr>
+    </tbody>
+  </table>
+
+  <div class="bank">
+    <div>ANZ BANK (OUR NEW BANK A/C DETAILS)</div>
+    <div>01-0183-0941080-00</div>
+  </div>
+
+  <div class="footer-block">
+
+      <!-- Terms -->
+    <div class="row left">
+      Terms: Cash Terms
+    </div>
+
+    <div class="row right">
+      <div class="amount-line">
+        <span>Parts: </span>
+        <span>$450.00</span>
+      </div>
+    </div>
+
+    <div class="row left">
+      <div>Please note: </div>
+    </div>
+
+    <div class="row left">
+      <div>*If you are paying by credit card there will be a 3% surcharge.</div>
+    </div>
+
+    <div>
+      <div>*All payment has to be made before collecting the vehicle.</div>
+    </div>
+
+    <div class="row right">
+      <div class="amount-line">
+        <span>Sub-Total: </span>
+        <span>$450.00</span>
+      </div>
+    </div>
+
+    <div class="row right">
+      <div class="amount-line">
+        <span>GST Amount: </span>
+        <span>$67.50</span>
+      </div>
+    </div>
+
+
+    <!-- Total bar -->
+    <div class="row total-bar">
+      <div>16291</div>
+      <div style="font-style: italic; font-weight: 500;">Printed: 24/02/24 4:00PM</div>
+      <div>Paid by NOT PAID</div>
+      <div>TOTAL</div>
+      <div>$517.50</div>
+    </div>
+  </div>
+
+
+</body>
+</html>

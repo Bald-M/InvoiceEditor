@@ -1,0 +1,264 @@
+/* body {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 2.5rem auto;
+  padding: 1.25rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #000;
+} */
+
+body {
+  background-color: #eee;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  font-family: Arial, sans-serif;
+  /* A4宽度 @ 96dpi */
+  /* max-width: 794px; */
+  /* margin: 1.5rem auto; */
+  max-width: 800px;
+  margin: 1.5rem auto;
+  padding: 1.25rem;
+  /* border: 1px solid #ccc; */
+  background-color: #fff;
+  color: #000;
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+h1:hover, .ltd:hover, .address:hover, .contact-info:hover, .company-info:hover {
+  color: orange;
+}
+
+.ltd {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #333333;
+  cursor: pointer;
+}
+
+
+.logo {
+  width: 3rem;
+  margin-right: 1rem;
+}
+
+.title {
+  position: relative;
+  height: 4rem;
+}
+
+.title .main-title {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.title .logo {
+  margin-top: 0;
+}
+
+.logo {
+  width: 3rem;
+}
+
+.header {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  padding: 0 5rem;
+}
+
+.address, .contact-info, .company-info {
+  font-size: 0.875rem; 
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+
+
+
+.suburb, .city, .street, .gst, .email, .url {
+  text-align: center;
+}
+
+.phone, .mobile, .fax {
+  display: inline-block; 
+  width: 2.875rem;
+}
+
+.invoice-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  border: 1px solid #aaa;
+  padding: 1rem 4.5rem .3125rem 4rem;
+  font-family: Arial, sans-serif;
+  font-size: 1.25rem;
+}
+
+.invoice-header:hover {
+  color: orange;
+  cursor: pointer;
+}
+
+.invoice-header .date {
+  justify-self: start;
+  font-size: .8125rem;
+}
+
+.invoice-header > .heading {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.invoice-header .number {
+  justify-self: end;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: Arial, sans-serif;
+  font-size: 0.875rem;
+  margin-top: .7rem;
+}
+
+.customer-box,
+.vehicle-box {
+  width: 49%;
+  height: 13rem;
+  border: 1px solid #ACACAC;
+  padding: 1.5rem 1rem;
+  box-sizing: border-box;
+}
+
+.customer-box:hover, .vehicle-box:hover {
+  color: orange;
+  cursor: pointer;
+}
+
+.vehicle-box .row {
+  display: flex;
+  margin-bottom: 0.375rem;
+}
+
+.vehicle-box .row span {
+  display: inline-block;
+  min-width: 6.25rem;
+}
+
+.customer-box .row {
+  display: flex;
+  margin-bottom: 0.375rem;
+}
+
+.customer-box .row span {
+  display: inline-block;
+  min-width: 6.25rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.25rem;
+  font-size: .875rem;
+}
+
+th, td {
+  padding: .5rem .3125rem;
+  text-align: left;
+}
+
+th {
+  border-bottom: 1px solid #ACACAC;
+}
+
+.description {
+  font-style: italic;
+  line-height: 1.5rem;
+  width: 31.25rem;
+}
+
+.description:hover, .service-header:hover, .bank:hover {
+  color: orange;
+  cursor: pointer;
+}
+
+.bank {
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 400px;
+  /* margin-top: 3rem; */
+  /* margin-bottom: 10rem; */
+}
+
+
+
+.bank > div {
+  font-weight: bold;
+}
+
+.footer-block {
+  font-family: Arial, sans-serif;
+  font-size: .875rem;
+  margin-top: 2rem;
+  border-top: 1px solid #aaa;
+}
+
+.footer-block .row {
+  display: flex;
+  justify-content: space-between;
+  margin: .375rem 0;
+}
+
+.footer-block .row.left {
+  justify-content: flex-start;
+}
+
+.footer-block .row.right {
+  justify-content: flex-end;
+}
+
+.footer-block .row.note {
+  font-size: .875rem;
+  line-height: 1.4;
+  justify-content: flex-start;
+}
+
+.footer-block .row.total-bar {
+  border: 1px solid #ccc;
+  padding: .5rem .75rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.25rem;
+  font-size: .875rem;
+}
+
+.footer-block .row.total-bar .total {
+  font-size: 1rem;
+}
+
+.amount-line {
+  display: flex; 
+  justify-content: space-between;
+  width: 18.75rem;
+}

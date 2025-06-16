@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Generator</title>
+  <link rel="stylesheet" href="./index.css">
+  <!-- Import style -->
+  <link rel="stylesheet" href="//unpkg.com/element-plus@2.10.2/dist/index.css" />
+</head>
+
+<body>
+
+  <div id="app">
+    <!-- Title -->
+    <div class="title">
+      <div class="main-title">
+        <h1 @click="data.titleDialogVisible = true">{{ data.title }}</h1>
+        <div class="ltd" @click="data.ltdDialogVisible = true">
+          {{ data.ltd }}
+        </div>
+      </div>
+      <div style="float: right;">
+        <img src="./logo-mta.png" class="logo" @click="downloadPDF()">
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <!-- Left: Address -->
+      <div class="address" @click="data.addressDialogVisible = true">
+        <div class="street">{{ data.address.split(',')[0] }}</div>
+        <div class="suburb">{{ data.address.split(',')[1] }}</div>
+        <div style="text-align: center;">
+          <span class="city">{{ data.address.split(',')[2].split(' ')[1] }}&nbsp;</span>
+          <span class="postcode">{{ data.address.split(',')[2].split(' ')[2] }}</span>
+        </div>
+      </div>
+
+      <!-- Center: Company Info -->
+      <div class="company-info" @click="data.companyInfoDialogVisible = true">
+        <div class="gst">
+          <span>GST No: </span>
+          <span>{{ data.companyInfo.GST }}</span>
+        </div>
+        <div class="email">
+          <span>Email: </span>
+          <span>{{ data.companyInfo.email }}</span>
+        </div>
+        <div class="url">{{ data.companyInfo.url }}</div>
+      </div>
+
+      <!-- Right: Contact Info -->
+      <div class="contact-info" @click="data.contactInfoDialogVisible = true">
+        <div>
+          <span class="phone">Phone:</span>
+          <span>{{ data.contactInfo.phone }}</span>
+        </div>
+
+        <div>
+          <span class="mobile">Mobile:</span>
+          <span>{{ data.contactInfo.mobile }}</span>
+        </div>
+
+        <div>
+          <span class="fax">Fax:</span>
+          <span>{{ data.contactInfo.fax }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invoice Header -->
+    <div class="invoice-header" @click="data.invoiceHeaderDialogVisible = true">
+      <div class="date">{{ new Date(data.invoiceHeader.date).toLocaleDateString('en-US', { year: 'numeric', month:
+        'long', day: 'numeric' }) }}</div>
+      <div class="heading">Tax Invoice</div>
+      <div class="number">{{ data.invoiceHeader.no }}</div>
+    </div>
+
+    <div class="section-row">
+      <!-- Customer Info -->
+      <div class="customer-box" @click="data.customerInfoDialogVisible = true">
+        <div class="row">
+          <span>Name:</span>
+          <span>{{ data.customerInfo.name }}</span>
+        </div>
+        <div class="row">
+          <span>Phone:</span>
+          <span>{{ data.customerInfo.phone }}</span>
+        </div>
+        <div class="row">
+          <span>Plate No:</span>
+          <span>{{ data.customerInfo.plateNo }}</span>
+        </div>
+        <div class="row">
+          <span>Address:</span>
+          <span>{{ data.customerInfo.address }}</span>
+        </div>
+        <div class="row">
+          <span>Mobile:</span>
+          <span>{{ data.customerInfo.mobile }}</span>
+        </div>
+      </div>
+
+      <!-- Right: Vehicle Info -->
+      <div class="vehicle-box" @click="data.vehicleInfoDialogVisible = true">
+        <div class="row" style="margin-bottom: 1rem;">
+          <span>Vehicle:</span>
+          <span>{{ data.vehicleInfo.vehicleNo }}</span>
+          <span>{{ data.vehicleInfo.makeModel }}</span>
+        </div>
+        <div class="row">
+          <span>Reading</span>
+          <span>{{ data.vehicleInfo.reading }}</span>
+        </div>
+        <div class="row">
+          <span>VIN Number</span>
+          <span>{{ data.vehicleInfo.vin }}</span>
+          <!-- <span style="text-align: end;">Fuel Type</span> -->
+        </div>
+        <div class="row">
+          <span>Fuel Type</span>
+          <span>{{ data.vehicleInfo.fuelType }}</span>
+        </div>
+        <div class="row">
+          <span>Chassis Nu</span>
+          <span>{{ data.vehicleInfo.chassisNo}}</span>
+        </div>
+        <div class="row">
+          <span>Model Numb</span>
+          <span>{{ data.vehicleInfo.modelNo }}</span>
+        </div>
+        <div class="row">
+          <span>Engine Num</span>
+          <span>{{ data.vehicleInfo.engineNo }}</span>
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr @click="data.serviceDialogVisible = true" class="service-header">
+          <th>Description</th>
+          <th class="right">Qty</th>
+          <th class="right">Price</th>
+          <th class="right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- <td class="description" @click="descriptionDialogVisible = true">CARRIED OUT FULL SERVICE. FLUSHED OUT ENGINE OIL. REPLACED OIL FILTER AND FILLED NEW
+            OIL.
+            TOP UP ALL FLUID LEVEL. TYRE PRESSURE DONE. TYRE DRESSING DONE. BATTERY TEST DONE.
+            CHECKED BRAKE FLUID CONDITION FOUND OK. POLISHED HEAD LIGHT LENSES. CARRIED OUT BATTERY TEST. FOUND OK.
+            GENERAL CHECK OVER DONE.</td> -->
+          <td class="description" @click="data.descriptionDialogVisible = true">{{ formatDescription(data.description)
+            }}</td>
+        </tr>
+
+        <!-- 动态服务项渲染 -->
+        <tr v-for="(item, index) in data.serviceItems" :key="index">
+          <td>{{ item.name }}</td>
+          <td class="right">{{ item.qty.toFixed(2) }}</td>
+          <td class="right">{{ item.price ? item.price.toFixed(2) : '' }}</td>
+          <td class="right">{{ (item.qty * item.price).toFixed(2) }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="bank" @click="data.bankInfoDialogVisible = true">
+      <div>{{ data.bankInfo.name }}</div>
+      <div>{{ data.bankInfo.account }}</div>
+    </div>
+
+    <div class="footer-block">
+      <div class="row left">
+        Terms: Cash Terms
+      </div>
+
+      <div class="row right">
+        <div class="amount-line">
+          <span>Parts: </span>
+          <!-- <span>$450.00</span> -->
+          <span>${{ partsTotal.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="row left">
+        <div>Please note: </div>
+      </div>
+
+      <div class="row left">
+        <div>*If you are paying by credit card there will be a 3% surcharge.</div>
+      </div>
+
+      <div>
+        <div>*All payment has to be made before collecting the vehicle.</div>
+      </div>
+
+      <div class="row right">
+        <div class="amount-line">
+          <span>Sub-Total: </span>
+          <span>${{ partsTotal.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="row right">
+        <div class="amount-line">
+          <span>GST Amount: </span>
+          <span>${{ gstAmount.toFixed(2) }}</span>
+        </div>
+      </div>
+
+
+      <!-- Total bar -->
+      <div class="row total-bar">
+        <div>{{ data.invoiceHeader.no }}</div>
+        <div style="font-style: italic; font-weight: 500;">Printed: {{ formatDisplayDate(printedTime) }}</div>
+        <div>Paid by NOT PAID</div>
+        <div>TOTAL</div>
+        <div>${{ grandTotal.toFixed(2) }}</div>
+      </div>
+
+      <!-- ElementPlus Components -->
+      <!-- titleDialog -->
+      <el-dialog v-model="data.titleDialogVisible" title="TITLE" width="800">
+        <el-form>
+          <el-form-item>
+            <el-input v-model="data.title" />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.titleDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.titleDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- ltdDialog -->
+      <el-dialog v-model="data.ltdDialogVisible" title="LTD" width="800">
+        <el-form>
+          <el-form-item>
+            <el-input v-model="data.ltd" />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.ltdDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.ltdDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- addressDialog -->
+      <el-dialog v-model="data.addressDialogVisible" title="ADDRESS" width="800">
+        <el-form>
+          <el-form-item label="Address">
+            <el-autocomplete v-model="data.address" :fetch-suggestions="addressSearch" :trigger-on-focus="false"
+              placeholder="Enter address" clearable />
+          </el-form-item>
+
+          <el-form-item label="Street">
+            <el-input v-model="data.address.split(',')[0]" />
+          </el-form-item>
+
+          <el-form-item label="Suburb">
+            <el-input v-model="data.address.split(',')[1]" />
+          </el-form-item>
+
+          <el-form-item label="City">
+            <el-input v-model="data.address.split(',')[2].split(' ')[1]" />
+          </el-form-item>
+
+          <el-form-item label="Postcode">
+            <el-input v-model="data.address.split(',')[2].split(' ')[2]" />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.addressDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.addressDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- companyInfoDialog -->
+      <el-dialog v-model="data.companyInfoDialogVisible" title="COMPANY INFO" width="800">
+        <el-form>
+          <el-form-item label="GST">
+            <el-input v-model="data.companyInfo.GST" placeholder="Enter GST Number" maxlength="11"
+              :formatter="formatGST" :parser="parseGST" />
+          </el-form-item>
+
+          <el-form-item label="Email">
+            <el-input v-model="data.companyInfo.email" />
+          </el-form-item>
+
+          <el-form-item label="URL">
+            <el-input v-model="data.companyInfo.url" />
+          </el-form-item>
+
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.companyInfoDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.companyInfoDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- contactInfoDialog -->
+      <el-dialog v-model="data.contactInfoDialogVisible" title="CONTACT INFO" width="800">
+        <el-form>
+          <el-form-item label="Phone">
+            <el-input v-model="data.contactInfo.phone" />
+          </el-form-item>
+
+          <el-form-item label="Mobile">
+            <el-input v-model="data.contactInfo.mobile" />
+          </el-form-item>
+
+          <el-form-item label="Fax">
+            <el-input v-model="data.contactInfo.fax" />
+          </el-form-item>
+
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.contactInfoDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.contactInfoDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- invoiceHeaderDialog -->
+      <el-dialog v-model="data.invoiceHeaderDialogVisible" title="INVOICE HEADER" width="800">
+        <el-form>
+          <el-form-item label="Date">
+            <el-date-picker v-model="data.invoiceHeader.date" type="date" placeholder="Pick a Date" format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD" />
+          </el-form-item>
+
+          <el-form-item label="Invoice Number">
+            <el-input v-model="data.invoiceHeader.no" />
+          </el-form-item>
+
+
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.invoiceHeaderDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.invoiceHeaderDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- customerInfoDialog -->
+      <el-dialog v-model="data.customerInfoDialogVisible" title="CUSTOMER INFO" width="800">
+        <el-form>
+          <el-form-item label="Address">
+            <el-autocomplete v-model="data.customerInfo.address" :fetch-suggestions="addressSearch"
+              :trigger-on-focus="false" placeholder="Enter address" clearable />
+          </el-form-item>
+
+          <el-form-item label="Name">
+            <el-input v-model="data.customerInfo.name" />
+          </el-form-item>
+
+          <el-form-item label="Phone">
+            <el-input v-model="data.customerInfo.phone" />
+          </el-form-item>
+
+          <el-form-item label="Mobile">
+            <el-input v-model="data.customerInfo.mobile" />
+          </el-form-item>
+
+          <el-form-item label="Plate No">
+            <el-input v-model="data.customerInfo.plateNo" />
+          </el-form-item>
+
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.customerInfoDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.customerInfoDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- vehicleInfoDialog -->
+      <el-dialog v-model="data.vehicleInfoDialogVisible" title="VEHICLE INFO" width="800">
+        <el-form>
+          <el-form-item label="Vehicle No">
+            <el-input v-model="data.vehicleInfo.vehicleNo" />
+          </el-form-item>
+
+          <el-form-item label="Make Model">
+            <el-input v-model="data.vehicleInfo.makeModel" />
+          </el-form-item>
+
+          <el-form-item label="Reading">
+            <el-input v-model="data.vehicleInfo.reading" />
+          </el-form-item>
+
+          <el-form-item label="VIN">
+            <el-input v-model="data.vehicleInfo.vin" />
+          </el-form-item>
+
+          <el-form-item label="Fuel Type">
+            <el-input v-model="data.vehicleInfo.fuelType" />
+          </el-form-item>
+
+          <el-form-item label="Chassis No">
+            <el-input v-model="data.vehicleInfo.chassisNo" />
+          </el-form-item>
+
+          <el-form-item label="Model No">
+            <el-input v-model="data.vehicleInfo.modelNo" />
+          </el-form-item>
+
+          <el-form-item label="Engine No">
+            <el-input v-model="data.vehicleInfo.engineNo" />
+          </el-form-item>
+
+
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.vehicleInfoDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.vehicleInfoDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- descriptionDialog -->
+      <el-dialog v-model="data.descriptionDialogVisible" title="VEHICLE INFO" width="800">
+        <el-form>
+          <el-form-item label="Description">
+            <el-select v-model="data.description" multiple clearable collapse-tags placeholder="Select"
+              popper-class="custom-header" :max-collapse-tags="1" style="width: 240px">
+              <el-option v-for="item in data.descriptionOptions" :key="item.value" :label="item.label"
+                :value="item.value" />
+            </el-select>
+          </el-form-item>
+
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.descriptionDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.descriptionDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- serviceDialog -->
+
+      <el-dialog v-model="data.serviceDialogVisible" title="SERVICE ITEMS" width="800">
+        <el-form inline label-width="100px">
+          <!-- 服务名称选择或输入 -->
+          <el-form-item label="Service">
+            <el-select v-model="newService.name" clearable placeholder="Select or type" filterable allow-create
+              default-first-option style="width: 220px" @change="handleServiceNameChange">
+              <el-option v-for="item in data.serviceOptions" :key="item.value" :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <!-- 数量 -->
+          <el-form-item label="Qty">
+            <el-input-number v-model="newService.qty" :min="1" />
+          </el-form-item>
+
+          <!-- 单价 -->
+          <el-form-item label="Price">
+            <el-input-number v-model="newService.price" :min="0" :step="10" />
+          </el-form-item>
+
+          <!-- 添加按钮 -->
+          <el-form-item>
+            <el-button type="primary" @click="addServiceItem">Add</el-button>
+          </el-form-item>
+        </el-form>
+
+        <!-- 表格展示当前服务项 -->
+        <el-table :data="data.serviceItems" style="width: 100%; margin-top: 20px" size="small" border>
+          <el-table-column prop="name" label="Service Name" width="200"></el-table-column>
+          <el-table-column prop="qty" label="Qty"></el-table-column>
+          <el-table-column prop="price" label="Price"></el-table-column>
+          <el-table-column prop="total" label="Total"></el-table-column>
+          <el-table-column label="Action" width="80">
+            <template #default="scope">
+              <el-button type="danger" size="small" @click="removeServiceItem(scope.$index)">
+                Delete
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <!-- 底部按钮 -->
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.serviceDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.serviceDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- bankInfoDialog -->
+      <el-dialog v-model="data.bankInfoDialogVisible" title="BANK INFO" width="800">
+        <el-form>
+          <el-form-item label="Bank Name">
+            <el-input v-model="data.bankInfo.name" />
+          </el-form-item>
+
+          <el-form-item label="NZ Bank Account Number">
+            <!-- <el-input v-model="data.bankInfo.account" placeholder="Enter Bank Account" maxlength="23"
+              :formatter="formatNZBankAccount" :parser="parseNZBankAccount" /> -->
+            <el-input v-model="data.bankInfo.account" placeholder="Enter Bank Account" maxlength="23"
+              :formatter="formatNZBankAccount" />
+          </el-form-item>
+        </el-form>
+
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="data.bankInfoDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="data.bankInfoDialogVisible = false">
+              Confirm
+            </el-button>
+          </div>
+        </template>
+
+      </el-dialog>
+
+
+    </div>
+  </div>
+
+  <!-- Import Vue 3 -->
+  <script src="//unpkg.com/vue@3"></script>
+  <!-- Import component library -->
+  <script src="//unpkg.com/element-plus@2.10.1"></script>
+  <!-- Import axios library -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Import html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const { createApp, watch, reactive, computed, ref, onMounted } = Vue;
+    const STORAGE_KEY = 'invoice_data';
+    const app = createApp({
+      setup() {
+        const printedTime = ref(Date.now());
+        // 每分钟更新一次
+        onMounted(() => {
+          setInterval(() => {
+            printedTime.value = Date.now();
+          }, 60 * 1000); // 每分钟
+        });
+
+
+        // 从 LocalStorage 加载数据
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+
+        const data = reactive({
+          title: stored.title || 'HILLSIDE AUTOMOTIVE',
+          titleDialogVisible: false,
+          ltd: stored.ltd || 'G.M. Enterprises Ltd',
+          ltdDialogVisible: false,
+          address: stored.address || '719 Richardson Road, Mt. Roskill, Auckland 1042',
+          addressDialogVisible: false,
+          companyInfo: {
+            GST: stored.GST || '122-569-020',
+            email: stored.email || 'hillsideautomotive@gmail.com',
+            url: stored.url || 'www.hillsideautomotive.co.nz'
+          },
+          companyInfoDialogVisible: false,
+          contactInfo: {
+            phone: stored.phone || '09 625 2360',
+            mobile: stored.mobile || '021 124 4364',
+            fax: stored.mobile || '09 625 2369'
+          },
+          contactInfoDialohVisible: false,
+          invoiceHeader: {
+            date: stored.date || '2025-01-01',
+            no: stored.no || '16291-1'
+          },
+          invoiceHeaderDialogVisible: false,
+          customerInfo: {
+            name: stored.name || 'John Appleseed',
+            phone: stored.customerPhone || '0212345678',
+            mobile: stored.customerMobile || '0212345678',
+            plateNo: stored.plateNo || 'ABC123',
+            address: stored.customerAddress || '719 Richardson Road, Mt. Roskill, Auckland 1042'
+          },
+          customerInfoDialogVisible: false,
+          vehicleInfo: {
+            vehicleNo: stored.vehicleNo || 'DK007',
+            makeModel: stored.makeModel || '2019 Audi Q5',
+            // 里程数（公里），表示车辆当前使用里程，单位常为km
+            reading: stored.reading || '87,030',
+            // 车辆识别号（Vehicle Identification Number），唯一标识一辆车，通常为17位 WAUZZZF45KN123456
+            vin: stored.vin || '',
+            // 燃油类型，如 Petrol / Diesel / Hybrid / Electric
+            fuelType: stored.fuelType || '',
+            // 底盘号（Chassis Number），也可能与 VIN 相同或关联，用于更精确的识别车辆结构部件 CHS123456789
+            chassisNo: stored.chassisNo || '',
+            // 型号编号，用于服务数据库中标记该车的具体车型版本 Q5-2.0T-2020
+            modelNo: stored.modelNo || '',
+            // 发动机编号，每台发动机独有编号，服务或维修中可能用于匹配零件、召回等场景 	ENG987654321
+            engineNo: stored.engineNo || ''
+          },
+          vehicleInfoDialogVisible: false,
+          description: stored.description || '',
+          descriptionOptions: [
+            {
+              value: "Carried out full service",
+              label: "Carried out full service"
+            },
+            {
+              value: "Flushed out engine oil",
+              label: "Flushed out engine oil"
+            },
+            {
+              value: "Replaced oil filter and filled new oil",
+              label: "Replaced oil filter and filled new oil"
+            },
+            {
+              value: "Topped up all fluid levels",
+              label: "Topped up all fluid levels"
+            },
+            {
+              value: "Tyre pressure done",
+              label: "Tyre pressure done"
+            },
+            {
+              value: "Tyre dressing done",
+              label: "Tyre dressing done"
+            },
+            {
+              value: "Battery test done",
+              label: "Battery test done"
+            },
+            {
+              value: "Checked brake fluid condition - found OK",
+              label: "Checked brake fluid condition - found OK"
+            },
+            {
+              value: "Polished headlight lenses",
+              label: "Polished headlight lenses"
+            },
+            {
+              value: "General check over done",
+              label: "General check over done"
+            }
+          ],
+          descriptionDialogVisible: false,
+          serviceItems: stored.serviceItems || [{ name: 'FULL SERVICE', qty: 1, price: 450, total: 450 }],
+          serviceOptions: [
+            { value: "FULL SERVICE", label: "FULL SERVICE" },
+            { value: "ENGINE SYSTEM FLUSH", label: "ENGINE SYSTEM FLUSH" },
+            { value: "ENGINE OIL", label: "ENGINE OIL" },
+            { value: "TYRE DRESSING", label: "TYRE DRESSING" },
+            { value: "BATTERY TEST", label: "BATTERY TEST" },
+            { value: "HEAD LIGHT LENS POLISH", label: "HEAD LIGHT LENS POLISH" },
+            { value: "GENERAL CHECK OVER", label: "GENERAL CHECK OVER" }
+          ],
+          serviceDialogVisible: false,
+          bankInfo: {
+            name: stored.bankName || 'ANZ BANK (OUR NEW BANK A/C DETAILS)',
+            account: stored.account || '01-0183-0941080-00'
+          },
+          bankInfoDialogVisible: false,
+          invoiceMeta: {
+            paidStatus: '',
+            gstRate: 0.15
+          }
+        });
+
+        const newService = reactive({
+          name: '',
+          qty: 1,
+          price: 0
+        });
+
+        // 自动持久化字段
+        watch(data, () => {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            title: data.title,
+            ltd: data.ltd,
+            address: data.address,
+            companyInfo: data.companyInfo,
+            contactInfo: data.contactInfo,
+            invoiceHeader: data.invoiceHeader,
+            customerInfo: data.customerInfo,
+            vehicleInfo: data.vehicleInfo,
+            description: data.description,
+            serviceItems: data.serviceItems,
+            bankInfo: data.bankInfo
+          }))
+        }, { deep: true });
+
+        function addressSearch(queryString, cb) {
+          axios.get(`https://api.tomtom.com/search/2/search/${encodeURIComponent(queryString)}.json`, {
+            params: {
+              key: 'LOu84RfRrExJLh7gev13cQTObaxYBwZN',
+              language: 'en-US',
+              countrySet: 'NZ'
+            }
+          })
+            .then(res => {
+              const suggestions = res.data.results
+                .filter(r => r.address && r.address.freeformAddress)
+                .map(item => ({
+                  value: item.address.freeformAddress
+                }));
+              cb(suggestions);
+            })
+            .catch(err => {
+              console.error('TomTom API error:', err);
+              cb([]);
+            });
+        }
+
+
+        function formatGST(value) {
+          // 去除所有非数字字符
+          const digits = value.replace(/\D/g, '').slice(0, 9);
+          // 格式化为 xxx-xxx-xxx
+          return digits.replace(/(\d{3})(?=\d)/g, '$1-');
+        }
+
+        function parseGST(value) {
+          // 清除格式，仅保留数字，最多 9 位
+          return value.replace(/\D/g, '').slice(0, 9);
+        }
+
+        function formatNZBankAccount(value) {
+          const digits = value.replace(/\D/g, '').slice(0, 16); // 最多16位数字
+          const len = digits.length;
+
+          if (len === 0) return '';
+
+          let result = '';
+
+          if (len <= 2) {
+            result = digits;
+          } else if (len <= 6) {
+            result = `${digits.slice(0, 2)}-${digits.slice(2)}`;
+          } else if (len <= 13) {
+            result = `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6)}`;
+          } else {
+            result = `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6, 13)}-${digits.slice(13)}`;
+          }
+
+          return result;
+        }
+
+        function formatDisplayDate(date) {
+          const d = new Date(date);
+          const pad = n => String(n).padStart(2, '0');
+          const hours = d.getHours();
+          const suffix = hours >= 12 ? 'PM' : 'AM';
+          const hour12 = hours % 12 || 12;
+
+          return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${String(d.getFullYear()).slice(-2)} ${hour12}:${pad(d.getMinutes())}${suffix}`;
+        }
+
+
+        function parseNZBankAccount(formattedValue) {
+          return formattedValue.replace(/\D/g, '').slice(0, 16);
+        }
+
+        function formatDescription(arr) {
+          if (!Array.isArray(arr)) return '';
+          return arr
+            .map(item => item.toUpperCase().trim().replace(/\.*$/, '') + '.') // 去掉已有句号，再加上一个
+            .join(' ');
+        }
+
+        function updateDescription() {
+          const lines = data.serviceItems.map(item => item.name);
+          data.description = lines.map(line =>
+            line.toUpperCase().trim().replace(/\.*$/, '') + '.'
+          ).join(' ');
+        }
+
+        function addServiceItem() {
+          const name = newService.name.trim().toUpperCase();
+          const total = Number(newService.qty) * Number(newService.price);
+
+          if (!name) return;
+
+          data.serviceItems.push({
+            name,
+            qty: Number(newService.qty),
+            price: Number(newService.price),
+            total: total
+          });
+
+          // 清空表单项
+          newService.name = '';
+          newService.qty = 1;
+          newService.price = 0;
+
+          // 自动刷新 description 字段
+          updateDescription();
+        }
+
+        function removeServiceItem(index) {
+          data.serviceItems.splice(index, 1);
+          updateDescription();
+        }
+
+        function handleServiceNameChange(value) {
+          const exists = data.serviceOptions.some(opt => opt.value === value);
+          if (!exists && value.trim()) {
+            data.serviceOptions.push({
+              value: value.trim().toUpperCase(),
+              label: value.trim().toUpperCase()
+            });
+          }
+        }
+
+        const partsTotal = computed(() =>
+          data.serviceItems.reduce((sum, item) => sum + (item.price || 0) * (item.qty || 1), 0)
+        );
+
+        const gstAmount = computed(() =>
+          +(partsTotal.value * data.invoiceMeta.gstRate).toFixed(2)
+        );
+
+        const grandTotal = computed(() =>
+          +(partsTotal.value + gstAmount.value).toFixed(2)
+        );
+
+        function downloadPDF() {
+          const element = document.getElementById('app');
+          const opt = {
+            margin: [0, 0.2],
+            filename: 'invoice.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+          };
+
+          html2pdf().set(opt).from(element).save();
+        }
+
+        return {
+          data,
+          addressSearch,
+          newService,
+          addServiceItem,
+          removeServiceItem,
+          formatGST,
+          parseGST,
+          formatNZBankAccount,
+          parseNZBankAccount,
+          handleServiceNameChange,
+          formatDescription,
+          printedTime,
+          formatDisplayDate,
+          partsTotal,
+          gstAmount,
+          grandTotal,
+          downloadPDF,
+        };
+      }
+    });
+
+    app.use(ElementPlus);
+    app.mount("#app");
+
+  </script>
+
+</body>
+
+</html>
