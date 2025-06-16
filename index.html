@@ -149,13 +149,13 @@
       </thead>
       <tbody>
         <tr>
-          <!-- <td class="description" @click="descriptionDialogVisible = true">CARRIED OUT FULL SERVICE. FLUSHED OUT ENGINE OIL. REPLACED OIL FILTER AND FILLED NEW
+          <!-- <td class="description">CARRIED OUT FULL SERVICE. FLUSHED OUT ENGINE OIL. REPLACED OIL FILTER AND FILLED NEW
             OIL.
             TOP UP ALL FLUID LEVEL. TYRE PRESSURE DONE. TYRE DRESSING DONE. BATTERY TEST DONE.
             CHECKED BRAKE FLUID CONDITION FOUND OK. POLISHED HEAD LIGHT LENSES. CARRIED OUT BATTERY TEST. FOUND OK.
             GENERAL CHECK OVER DONE.</td> -->
-          <td class="description" @click="data.descriptionDialogVisible = true">{{ formatDescription(data.description)
-            }}</td>
+
+          <td class="description" @click="data.descriptionDialogVisible = true">{{ formatDescription(data.description) }}</td>
         </tr>
 
         <!-- 动态服务项渲染 -->
@@ -633,7 +633,7 @@
             engineNo: stored.engineNo || ''
           },
           vehicleInfoDialogVisible: false,
-          description: stored.description || '',
+          description: stored.description || ['Carried out full service', 'Flushed out engine oil', 'Replaced oil filter and filled new oil'],
           descriptionOptions: [
             {
               value: "Carried out full service",
